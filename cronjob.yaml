@@ -1,0 +1,30 @@
+# cronjob.yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: clean-old-items
+spec:
+  schedule: "0 0 * * *"  # Todos los días a medianoche
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: clean-old-items
+              image: nestjs-graphql-api:latest  # Reemplaza con tu imagen
+              command: ["node", "dist/main.js"]
+              args: ["--cron"]
+              env:
+                - name: NODE_ENV
+                  value: "production"
+                - name: DB_HOST
+                  value: "postgres-service"  # Asegúrate de que apunte a tu base de datos
+                - name: DB_PORT
+                  value: "5432"
+                - name: DB_USERNAME
+                  value: "postgres"
+                - name: DB_PASSWORD
+                  value: "Richard26"
+                - name: DB_NAME
+                  value: "nestjs_graphql"
+          restartPolicy: OnFailure
